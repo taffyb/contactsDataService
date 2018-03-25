@@ -1,0 +1,47 @@
+var express = require('express');
+var router = express.Router(); 
+var nodeSvc = require('./services/svc_nodes');
+
+
+router.route('/')
+	.get(function(req,res){	
+		nodeSvc.getNodes()
+			.then(function(result){res.json(result);})
+			.catch(function(err){res.status(400).json({status:400,message:err});});
+	})
+	.post(function(req,res){
+		var nodes = req.body.nodes;
+		if(!nodes){
+			res.status(400).json({status:400,message:"No nodes provided.",href:""});
+		}else {
+			if(!Array.isArray(nodes)){
+				nodes = [nodes];
+			}
+			nodeSvc.addNodes(nodes)
+				.then(function(result){res.json(result);})
+				.catch(function(err){res.status(400).json({status:400,message:err});});
+		}
+	});
+router.route('/:UUID')
+	.delete(function(req,res){
+		var UUID = req.params.UUID;
+		nodeSvc.deleteNode(UUID)
+			.then(function(result){
+				res.sendStatus(204);
+			})
+			.catch(function(err){res.status(400).json({status:400,message:err});});
+	});
+router.route('/types')
+.get(function(req,res){		
+	nodeSvc.getNodeTypes()
+		.then(function(result){res.json(result);})
+		.catch(function(err){res.status(400).json({status:400,message:err});});
+});
+router.route('/edges')
+	.get(function(req,res){
+		nodeSvc.getEdges()
+			.then(function(result){res.json(result);})
+			.catch(function(err){res.status(400).json({status:400,message:err});});
+		
+	});
+module.exports=router;

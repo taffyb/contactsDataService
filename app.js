@@ -48,35 +48,10 @@ app.all('*', function(req, res,next) {
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-var datasets = require('./routes/datasets');
-var users = require('./routes/users');
+var nodes = require('./routes/nodes');
 
 app.use('/api', router);
-app.use('/api/datasets', datasets);
-app.use('/api/users', users);
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our administration routes will be prefixed with /adminapi
-
-var adminTopics = require('./routes/admin/topics');
-var adminDatasets = require('./routes/admin/datasets');
-var adminKeywords = require('./routes/admin/keywords');
-var adminMeasures = require('./routes/admin/measures');
-var adminPublishers = require('./routes/admin/publishers');
-var adminPublications = require('./routes/admin/publications_routes');
-var adminBaseData = require('./routes/admin/data');
-app.use("/adminapi/topics/", adminTopics);
-app.use("/adminapi/datasets/", adminDatasets);
-app.use("/adminapi/keywords/", adminKeywords);
-app.use("/adminapi/measures/", adminMeasures);
-app.use("/adminapi/publishers/", adminPublishers);
-app.use("/adminapi/publications/", adminPublications);
-app.use("/adminapi/data/", adminBaseData);
-
-// REGISTER OUR ROUTES -------------------------------
-// all of our reporting routes will be prefixed with /rptapi
-var rptRoutes = require('./routes/reporting/rpt_routes');
-app.use("/rptapi/", rptRoutes);
+app.use('/api/nodes', nodes);
 
 try{
 	
