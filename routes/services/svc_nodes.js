@@ -41,7 +41,7 @@ function getEdges(){
 				reject(error);
 			},
 			/*name of cypher file*/
-			"getEdges.cyp",{},true
+			"getEdges.cyp"
 		);
 	});
 }
@@ -63,7 +63,7 @@ function getNodes(){
 				delete nodes[type][UUID].UUID;
 				delete nodes[type][UUID].type;
 			});
-			//console.log(`nodes=${JSON.stringify(nodes)}`);
+//			console.log(`nodes=${JSON.stringify(nodes)}`);
 			resolve(nodes);
 		},
 		/*catch()*/
@@ -109,8 +109,8 @@ function deleteNode(UUID){
 		neo4jService.executeCypher(
 			/*then()*/
 			function(result){
-				console.log(`${JSON.stringify(result)}`);
-				console.log(`Deleted:${result.summary.counters._stats.nodesDeleted}`);
+//				console.log(`${JSON.stringify(result)}`);
+//				console.log(`Deleted:${result.summary.counters._stats.nodesDeleted}`);
 				
 				resolve(true);
 			},
@@ -125,8 +125,53 @@ function deleteNode(UUID){
 		);
 	});
 }
+function updateNode(node){
+
+	return new Promise(function(resolve,reject){
+		neo4jService.executeCypher(
+			/*then()*/
+			function(result){
+				//console.log(`${JSON.stringify(result)}`);
+				var node = result.records[0]._fields[0].properties;	
+				//console.log(`Node:${JSON.stringify(node)}`);			
+				resolve(node);
+			},
+			/*catch()*/
+			function (error) {
+				console.log(`${error}`);
+				reject(error);
+			},
+			/*name of cypher file*/
+			"updateNode.cyp",
+			{node:node},
+			false
+		);
+	});
+}
+function getLinksFor(sourceUUID,type,min){
+	const params={source:sourceUUID,type:type,start:(start || -1)};
+	return new Promise(function(resolve,reject){
+		neo4jService.executeCypher(
+			/*then()*/
+			function(result){
+				let links = result.records[0].get("links");
+				
+				resolve(links);
+			},
+			/*catch()*/
+			function (error) {
+				console.log(`${error}`);
+				reject(error);
+			},
+			/*name of cypher file*/
+			"getLinks.cyp",params,true
+		);
+	});
+}
 module.exports={getNodeTypes:getNodeTypes,
 		getNodes:getNodes,
 		getEdges:getEdges,
 		addNodes:addNodes,
-		deleteNode:deleteNode};
+		deleteNode:deleteNode,
+		updateNode:updateNode,
+		getLinks:getLinksFor};

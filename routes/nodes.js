@@ -10,6 +10,7 @@ router.route('/')
 			.catch(function(err){res.status(400).json({status:400,message:err});});
 	})
 	.post(function(req,res){
+//		console.log(`${JSON.stringify(req.body.nodes)}`);
 		var nodes = req.body.nodes;
 		if(!nodes){
 			res.status(400).json({status:400,message:"No nodes provided.",href:""});
@@ -28,6 +29,15 @@ router.route('/:UUID')
 		nodeSvc.deleteNode(UUID)
 			.then(function(result){
 				res.sendStatus(204);
+			})
+			.catch(function(err){res.status(400).json({status:400,message:err});});
+	})
+	.put(function(req,res){
+		var node = req.body.node;
+//		console.log(`PUT.body: ${JSON.stringify(node)}`);
+		nodeSvc.updateNode(node)
+			.then(function(result){
+				res.sendStatus(200);
 			})
 			.catch(function(err){res.status(400).json({status:400,message:err});});
 	});
