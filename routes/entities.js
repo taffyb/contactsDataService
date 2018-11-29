@@ -1,17 +1,17 @@
 var express = require('express');
 var router = express.Router(); 
-var nodeSvc = require('./services/svc_nodes');
+var nodeSvc = require('./services/svc_entities');
 
 
 router.route('/')
 	.get(function(req,res){	
-		nodeSvc.getNodes()
+		nodeSvc.getEntityDefs()
 			.then(function(result){res.json(result);})
 			.catch(function(err){res.status(400).json({status:400,message:err});});
 	})
 	.post(function(req,res){
 //		console.log(`${JSON.stringify(req.body.nodes)}`);
-		var nodes = req.body.nodes;
+		const nodes = req.body.nodes;
 		if(!nodes){
 			res.status(400).json({status:400,message:"No nodes provided.",href:""});
 		}else {
@@ -41,17 +41,10 @@ router.route('/:UUID')
 			})
 			.catch(function(err){res.status(400).json({status:400,message:err});});
 	});
-router.route('/types')
+router.route('/type')
 .get(function(req,res){		
 	nodeSvc.getNodeTypes()
 		.then(function(result){res.json(result);})
 		.catch(function(err){res.status(400).json({status:400,message:err});});
 });
-router.route('/edges')
-	.get(function(req,res){
-		nodeSvc.getEdges()
-			.then(function(result){res.json(result);})
-			.catch(function(err){res.status(400).json({status:400,message:err});});
-		
-	});
 module.exports=router;

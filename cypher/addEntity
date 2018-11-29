@@ -1,0 +1,22 @@
+//entity:{type:"",properties:{},rels_from:[{GUID:"",type:"",props:{}}]],rels_to:[{{GUID:"",type:"",props:{}}}]}
+//Example: entity:{type:"Person", properties:{name:"Suzannah"}, rels_from:[{GUID:"b3641b7e-bd2c-4957-b44a-fe115d166e35", type:"WORKS_FOR",props:{}}], rels_to:[] }
+
+MATCH (d:EntityDef{name:$entity.type})
+CREATE (e:Entity)
+	SET e=$entity.properties,
+		e.GUID=apoc.create.uuid()
+WITH d,e
+CALL apoc.create.addLabels(e,[$entity.type]) YIELD node
+WITH d,e
+MERGE (e)-[:DEFINED_BY]->(d)
+WITH e
+UNWIND $entity.rels_from as r
+MATCH (e2:Entity{GUID:r.GUID})
+CALL apoc.create.relationship(e, r.type, r.props, e2) YIELD rel
+WITH e,collect(r) as rels_from
+UNWIND $entity.rels_to as r
+MATCH (e2:Entity{GUID:r.GUID})
+CALL apoc.create.relationship(e2, r.type, r.props, e) YIELD rel
+WITH e,collect(r) as rels_to
+RETURN e.GUID
+
