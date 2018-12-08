@@ -1,10 +1,12 @@
-// entity:{GUID:""}
+// filter:{GUID:null,entityType:null}
 
+// filter:{entityType:"Person"}
+// filter:{GUID:"b3641b7e-bd2c-4957-b44a-fe115d166e35"}
 
 MATCH (e:Entity)
-WHERE $entity IS NULL or e.GUID = $entity.GUID
+WHERE (NOT $filter IS NULL) AND (($filter.GUID IS NULL) OR (e.GUID = $filter.GUID))
 WITH e,filter(l IN labels(e) WHERE l <>"Entity")[0] as type, properties(e) as details
-WHERE (NOT type IS NULL) AND (($entityType IS NULL) OR (type=$entityType))
+WHERE (NOT $filter IS NULL) AND (($filter.entityType IS NULL) OR (type=$filter.entityType))
 OPTIONAL MATCH (e)-[from_rels]->(n)
 WITH e,from_rels,n,type,details
 WHERE NOT "EntityDef" IN labels(n) 

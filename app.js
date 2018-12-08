@@ -49,9 +49,13 @@ app.all('*', function(req, res,next) {
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 var entities = require('./routes/entities');
+var entityDefs = require('./routes/entityDefs');
+var rels = require('./routes/relationships');
 
 app.use('/api', router);
 app.use('/api/entities', entities);
+app.use('/api/entityDefs', entityDefs);
+app.use('/api/relationships', rels);
 
 try{
 	

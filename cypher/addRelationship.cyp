@@ -2,4 +2,4 @@
 
 MATCH (from:Entity{GUID:$rel.fromGUID}),(to:Entity{GUID:$rel.toGUID})
 CALL apoc.create.relationship(from,$rel.type,$rel.props,to) YIELD rel
-RETURN from
+RETURN true as success
